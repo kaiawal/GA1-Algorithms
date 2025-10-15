@@ -22,6 +22,26 @@ def majority_party_size(n, same_party):
         return: The number of delegates in the majority party.  You can assume
             more than half of the delegates belong to the same party.
     '''
+    num_delegates = list(range(n))
+    if n == 0:
+        return 0
+    def recursive_party(delegates):
+
+        if len(delegates) == 1:
+            return delegates[0]
+
+        half1 = delegates[:len(delegates)//2]
+        half2 = delegates[len(delegates)//2:]
+        half1_candidate = recursive_party(half1)
+        half2_candidate = recursive_party(half2)
+        if same_party(half1_candidate, half2_candidate):
+            return half1_candidate
+        count_left = sum(1 for d in delegates if same_party(d, half1_candidate))
+        count_right = sum(1 for d in delegates if same_party(d, half2_candidate))
+        return half1_candidate if count_left > count_right else half2_candidate
+        
+    candidate = recursive_party(num_delegates)
+    size = sum(1 for d in num_delegates if same_party(d, candidate))
 
     # Replace the following line with your code.
-    return 1
+    return size
